@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Viewer</title>
+
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css">
+
+
+          
+    <style>
+        body {
+            background: #202225;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .markdown-body {
+            max-width: 900px;
+            margin: auto;
+            background: #2f3136;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(99, 97, 97, 0.08);
+        }
+
+        /** code tabs css **/
+        .code-tabs{
+            margin:24px 0;
+            border:1px solid #3d3d3d;
+            border-radius:10px;
+            overflow:hidden;
+            background:#1e1e1e;
+        }
+        .tab-bar{
+            display:flex;
+            gap:2px;
+            background:#2b2b2b;
+            border-bottom:1px solid #3d3d3d;
+            overflow-x:auto;
+        }
+        .tab-bar button{
+            appearance:none;
+            border:none;
+            background:transparent;
+            color:#9ca3af;
+            padding:12px 18px;
+            cursor:pointer;
+            font-size:14px;
+            white-space:nowrap;
+            transition:.2s;
+        }
+        .tab-bar button:hover{
+            color:#fff;
+            background:#383838;
+        }
+        .tab-bar button.active{
+            color:#fff;
+            background:#1e1e1e;
+            border-bottom:3px solid #3b82f6;
+        }
+        .tab-content{
+            display:none;
+        }
+        .tab-content.active{
+            display:block;
+        }
+        /* Remove extra margin from Prism */
+        .tab-content pre{
+            margin:0 !important;
+            border-radius:0 !important;
+        }
+
+        /** youtube cards **/
+        .youtube-card{
+            position:relative;
+            margin:30px 0;
+        }
+        .youtube-card img{
+            width:100%;
+            border-radius:10px;
+            display:block;
+        }
+        .play-button{
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            font-size:70px;
+            color:white;
+            text-shadow:0 0 20px black;
+            pointer-events:none;
+        }
+
+    </style>
+</head>
+<body>
+
+<article id="content" class="markdown-body"></article>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+
+
+
+<script type="module">
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
+    // Replace this with your markdown string
+    // const md = {
+    //     "data": "# Static Arrays\n\nIn statically typed languages like Java, C++ and C#, arrays have to have an allocated *size and type* when initialized. These are known as **static arrays**. \n\nThey are called static because the size of the array cannot change once declared. And once the array is full, it can *not* store additional elements. Some dynamically typed languages such as Python and JavaScript do not have static arrays to begin with. They have an alternative, which we will discuss in the next lesson.\n\nLet's cover the key operations of an array, and the time complexity associated with each.\n\n## Reading from an array\n\nTo read an individual element from an array we can choose the position we want to access via an **index**. Below we have initialized an array of size `3` called `myArray`. We also attempt to access an arbitrary element using the index `i`.\n\n::tabs-start\n\n```python\n# initialize myArray\nmyArray = [1,3,5]\n\n# access an arbitrary element, where i is the index of the desired value\nmyArray[i]\n```\n\n```java\n// initialize myArray\nint[] myArray = {1,3,5};\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i];\n```\n\n```cpp\n// initialize myArray\nmyArray = {1,3,5};\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i];\n```\n\n```javascript\n// initialize myArray\nlet myArray = [1, 3, 5];\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i];\n```\n\n```csharp\n// initialize myArray\nmyArray = {1,3,5};\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i];\n```\n\n```swift\n// initialize myArray\nmyArray = [1,3,5]\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i]\n```\n\n```go\n// initialize myArray\nmyArray := []int{1, 3, 5}\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i]\n```\n\n```kotlin\n// initialize myArray\nval myArray = intArrayOf(1, 3, 5)\n\n// access an arbitrary element, where i is the index of the desired value\nmyArray[i]\n```\n\n::tabs-end\n\n![reading-from-array](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/d993dba7-19fa-4dae-748b-1a7a1d9e0900/sharpen=1)\n\nAccessing a single element in an array is always instant because each index of `myArray` is mapped to an address in the RAM. Regardless of the size of the input array, the time taken to access a single element is the same. We refer to this operation as $O(1)$ in terms of time complexity.\n\n> There is a common confusion that $O(1)$ is always fast. This is not the case. There could be $1000$ operations and the time complexity could still be $O(1)$. If the number of operations does not grow as the size of the data or input grows then it is $O(1)$.\n\n### Traversing through an array\n\nWe can also read all values within an array by traversing through it. Below are examples of how we could traverse `myArray` from the start to the end using loops.\n\n::tabs-start\n\n```python\nfor i in range(len(myArray)):\n   print(myArray[i])\n\n# OR\n\ni = 0\nwhile i < len(myArray):\n   print(myArray[i])\n   i += 1\n```\n\n```java\nfor (int i = 0; i < myArray.length; i++) {\n    System.out.println(myArray[i]);\n}\n\n// OR\n\nint i = 0;\nwhile (i < myArray.length) {\n    System.out.println(myArray[i]);\n    i++;\n}\n```\n\n```cpp\nfor (int i = 0; i < length; i++) {\n    cout << myArray[i];\n}\n\n// OR\n\nint i = 0;\nwhile i < length {\n    cout << myArray[i];\n    i++;\n}\n```\n\n```javascript\nfor (let i = 0; i < myArray.length; i++) {\n  console.log(myArray[i]);\n}\n\n// OR\n\nlet i = 0;\nwhile (i < myArray.length) {\n  console.log(myArray[i]);\n  i++;\n}\n```\n\n```csharp\nfor (int i = 0; i < myArray.Count; i++) {\n    Console.WriteLine(myArray[i]);\n}\n\n// OR\n\nint i = 0;\nwhile (i < myArray.size) {\n    Console.WriteLine(myArray[i]);\n    i++;\n}\n```\n\n```swift\nfor i in stride(from: length - 1, through: i, by: -1) {\n    print(myArray[i])\n}\n\n// OR\n\nlet i = 0\nwhile i < length {\n    print(myArray[i])\n    i += 1\n}\n```\n\n```go\nfor i := 0; i < len(myArray); i++ {\n    fmt.Println(myArray[i])\n}\n\n// OR\n\ni := 0\nfor i < len(myArray) {\n    fmt.Println(myArray[i])\n    i++\n}\n```\n\n```kotlin\nfor (i in 0 until myArray.size) {\n    println(myArray[i])\n}\n\n// OR\n\nvar i = 0\nwhile (i < myArray.size) {\n    println(myArray[i])\n    i++\n}\n```\n\n::tabs-end\n\n> The last element in an array is always at index $n - 1$ where $n$ is the size of the array. If the size of our array is $3$, the last accessible index is $2$.\n\nTo traverse through an array of size $n$ the time complexity is $O(n)$. This means the number of operations grows linearly with the size of the array.\n\nFor example, with an array of size `10` we would have to perform `10` operations to traverse through it, with an array of size `100` we would have to perform `100` operations, and so on.\n\n---\n\n## Deleting from an array\n\n### Deleting from the end of the array\n\n<div\nclass=\"video-container\"\nstyle=\"margin-top: 20px; position: relative; overflow: hidden\"\n>\n<iframe\nclass=\"video\"\nsrc=\"https://www.youtube.com/embed/m70BnuQQJys?rel=0\"\ntitle=\"Youtube video player\"\nframeborder=\"0\"\nallow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\"\nallowfullscreen\n>\n</iframe>\n</div>\n\nIn statically typed languages, all array indices are filled with `0s` or some default value upon initialization, denoting an empty array. \n\nWhen we want to remove an element from the **last index** of an array, setting its value to `0` / `null` or `-1` is the best we can do. This is known as a **soft delete**. The element is not being \"deleted\" per se, but it is being overwritten by a value that denotes an empty index. We will also reduce the length by `1` since we have one less element in the array after deletion. The code below demonstrates the concept using `[4, 5, 6]` as an example.\n\n::tabs-start\n\n```python\n# Remove from the last position in the array if the array\n# is not empty (i.e. length is non-zero).\ndef removeEnd(arr, length):\n    if length > 0:\n        # Overwrite last element with some default value.\n        # We would also consider the length to be decreased by 1.\n        arr[length - 1] = 0\n```\n\n```java\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\npublic void removeEnd(int[] arr, int length) {\n    if (length > 0) {\n        // Overwrite last element with some default value.\n        // We would also consider the length to be decreased by 1.\n        arr[length - 1] = 0;\n        length--;\n    }\n}\n```\n\n```cpp\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\nvoid removeEnd(int arr[], int length) {\n    if (length > 0) {\n        // Overwrite last element with some default value.\n        // We would also consider the length to be decreased by 1.\n        arr[length - 1] = 0;\n    }\n}\n```\n\n```javascript\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\nremoveEnd(arr, length) {\n    if (length > 0) {\n        // Overwrite last element with some default value.\n        // We would also consider the length to be decreased by 1.\n        arr[length - 1] = 0;\n        length--;\n    }\n}\n```\n\n```csharp\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\npublic void removeEnd(int[] arr, int length) {\n    if (length > 0) {\n        // Overwrite last element with some default value.\n        // We would also consider the length to be decreased by 1.\n        arr[length - 1] = 0;\n        length--;\n    }\n}\n```\n\n```swift\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\nfunc removeEnd(_ arr: inout [Int], _ length: Int) {\n  if length > 0 {\n    // Overwrite last element with some default value\n    // We would also consider the length to be decreased by 1\n    arr[length - 1] = 0\n  }\n}\n```\n\n```go\n// Remove from the last position in the array if the array\n// is not empty (i.e., length is non-zero).\nfunc removeEnd(arr []int, length int) []int {\n    if length > 0 {\n        arr[length-1] = 0\n        length--\n    }\n    return arr\n}\n```\n\n```kotlin\n// Remove from the last position in the array if the array\n// is not empty (i.e. length is non-zero).\nfun removeEnd(arr: IntArray, length: Int): Int {\n    var len = length\n    if (len > 0) {\n        // Overwrite last element with some default value.\n        // We would also consider the length to be decreased by 1.\n        arr[len - 1] = 0\n        len--\n    }\n    return len\n}\n```\n\n::tabs-end\n\n![deletion-at-end](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/abf96287-60e4-460a-b480-04804743ae00/sharpen=1)\n\n> $6$ is deleted/overwritten by either $0$ or $-1$ to denote that it does not exist anymore. Length is also decremented by $1$.\n\n### Deleting at an Ith Index\n\n<div\nclass=\"video-container\"\nstyle=\"margin-top: 20px; position: relative; overflow: hidden\"\n>\n<iframe\nclass=\"video\"\nsrc=\"https://www.youtube.com/embed/g2G8pZvgek8?rel=0\"\ntitle=\"Youtube video player\"\nframeborder=\"0\"\nallow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\"\nallowfullscreen\n>\n</iframe>\n</div>\n\nIf instead of deleting at the end, we wanted to delete an element at a random index `i`. Would we be able to perform this in $O(1)$? \n\nWe could naively just replace it with a `0`, but this would break the contiguous nature of our array. Notice that deleting from the end of an array doesn't make it non-contigious, but deleting from the middle will.\n\nA better approach would be the following:\n\n1. We are given the deletion index `i`.\n2. We iterate starting from `i + 1` until the end of the array.\n3. We shift each element `1` position to the left.\n4. (Optional) We replace the last element with a `0` or `null` to mark it empty, and decrement the length by `1`.\n\n The following code demonstrates this operation.\n\n::tabs-start\n\n```python\n# Remove value at index i before shifting elements to the left.\n# Assuming i is a valid index.\ndef removeMiddle(arr, i, length):\n    # Shift starting from i + 1 to end.\n    for index in range(i + 1, length):\n        arr[index - 1] = arr[index]\n    # No need to 'remove' arr[i], since we already shifted\n```\n\n```java\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\npublic void removeMiddle(int[] arr, int i, int length) {\n    // Shift starting from i + 1 to end.\n    for (int index = i + 1; index < length; index++) {\n        arr[index - 1] = arr[index];\n    }\n    // No need to 'remove' arr[i], since we already shifted\n}\n```\n\n```cpp\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\nvoid removeMiddle(int arr[], int i, int length) {\n    // Shift starting from i + 1 to end.\n    for (int index = i + 1; index < length; index++) {\n        arr[index - 1] = arr[index];\n    }\n    // No need to 'remove' arr[i], since we already shifted\n}\n```\n\n```javascript\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\nremoveMiddle(arr, i, length) {\n    // Shift starting from i + 1 to end.\n    for (let index = i + 1; index < length; index++) {\n        arr[index - 1] = arr[index];\n    }\n    // No need to 'remove' arr[i], since we already shifted\n}\n```\n\n```csharp\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\npublic void RemoveMiddle(int[] arr, int i, int length) {\n    // Shift starting from i + 1 to end.\n    for (int index = i + 1; index < length; index++) {\n        arr[index - 1] = arr[index];\n    }\n    // No need to 'remove' arr[i], since we already shifted\n}\n```\n\n```swift\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index\nfunc removeMiddle(_ arr: inout [Int], _ i: Int, _ length: Int) {\n  // Shift starting from i + 1 to end\n  for index in i + 1..<length {\n    arr[index - 1] = arr[index]\n  }\n  // No need to 'remove' arr[i] since we already shifted\n}\n```\n\n```go\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\nfunc removeMiddle(arr []int, i, length int) []int {\n    // Shift starting from i + 1 to end.\n    for index := i + 1; index < length; index++ {\n        arr[index-1] = arr[index]\n    }\n    // No need to 'remove' arr[i], since we already shifted\n    return arr\n}\n```\n\n```kotlin\n// Remove value at index i before shifting elements to the left.\n// Assuming i is a valid index.\nfun removeMiddle(arr: IntArray, i: Int, length: Int) {\n    // Shift starting from i + 1 to end.\n    for (index in i + 1 until length) {\n        arr[index - 1] = arr[index]\n    }\n    // No need to 'remove' arr[i], since we already shifted\n}\n```\n\n::tabs-end\n\n![removal-0th-index](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/c548890a-6c61-4359-c96a-c04073291300/sharpen=1)\n\n> The worst case would be that we need to shift **all** of the elements to the left. This would occur if the target index is the first index of the array. Therefore, the code above is $O(n)$.\n\n## Insertion\n\n### Inserting at the end \n\n<div\nclass=\"video-container\"\nstyle=\"margin-top: 20px; position: relative; overflow: hidden\"\n>\n<iframe\nclass=\"video\"\nsrc=\"https://www.youtube.com/embed/YJdXR8kqWyM?rel=0\"\ntitle=\"Youtube video player\"\nframeborder=\"0\"\nallow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\"\nallowfullscreen\n>\n</iframe>\n</div>\n\nIf we want to insert an element at the end of the array, we can simply insert it at the next open position which will be at index `length` where `length` is the number of elements in the array.\n\n::tabs-start\n\n```python\n# Insert n into arr at the next open position.\n# Length is the number of 'real' values in arr, and capacity\n# is the size (aka memory allocated for the fixed size array).\ndef insertEnd(arr, n, length, capacity):\n    if length < capacity:\n        arr[length] = n\n```\n\n```java\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\npublic void insertEnd(int[] arr, int n, int length, int capacity) {\n    if (length < capacity) {\n        arr[length] = n;\n    }\n}\n```\n\n```cpp\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\nvoid insertEnd(int arr[], int n, int length, int capacity) {\n    if (length < capacity) {\n        arr[length] = n;\n    }\n}\n```\n\n```javascript\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\ninsertEnd(arr, n, length,  capacity) {\n    if (length < capacity) {\n        arr[length] = n;\n    }\n}\n```\n\n```csharp\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\npublic void InsertEnd(int[] arr, int n, int length, int capacity) {\n    if (length < capacity) {\n        arr[length] = n;\n    }\n}\n```\n\n```swift\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\nfunc insertEnd(_ arr: inout [Int], _ n: Int, _ length: Int, _ capacity: Int) {\n  if length < capacity {\n    arr[length] = n\n  }\n}\n```\n\n```go\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\nfunc insertEnd(arr []int, n, length, capacity int) []int {\n    if length < capacity {\n        arr[length] = n\n    }\n    return arr\n}\n```\n\n```kotlin\n// Insert n into arr at the next open position.\n// Length is the number of 'real' values in arr, and capacity\n// is the size (aka memory allocated for the fixed size array).\nfun insertEnd(arr: IntArray, n: Int, length: Int, capacity: Int) {\n    if (length < capacity) {\n        arr[length] = n\n    }\n}\n```\n\n::tabs-end\n\n> Since we are writing a single value to the array, the time complexity is $O(1)$.\n\nNote: `length` is the number of elements inside the array whereas `capacity` refers to the maximum number of elements the array can hold.\n\n### Inserting at the Ith Index\n\n<div\nclass=\"video-container\"\nstyle=\"margin-top: 20px; position: relative; overflow: hidden\"\n>\n<iframe\nclass=\"video\"\nsrc=\"https://www.youtube.com/embed/WpwzW9rerFo?rel=0\"\ntitle=\"Youtube video player\"\nframeborder=\"0\"\nallow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\"\nallowfullscreen\n>\n</iframe>\n</div>\n\nInserting at an arbitrary index `i` is more involved since we may insert in the middle of the array. \n\nConsider the array `[4, 5, 6]`. If we need to insert at index `i = 1`, or `i = 0`, we cannot overwrite the original value because we would lose it. Instead, we will need to shift all values, starting at index `i`, one position to the right. Below is the code and visual demonstrating this.\n\n::tabs-start\n\n```python\n# Insert n into index i after shifting elements to the right.\n# Assuming i is a valid index and arr is not full.\ndef insertMiddle(arr, i, n, length):\n    # Shift starting from the end to i.\n    for index in range(length - 1, i - 1, -1):\n        arr[index + 1] = arr[index]\n    \n    # Insert at i\n    arr[i] = n\n```\n\n```java\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\npublic void insertMiddle(int[] arr, int i, int n, int length) {\n    // Shift starting from the end to i.\n    for (int index = length - 1; index > i - 1; index--) {\n        arr[index + 1] = arr[index];\n    }\n    // Insert at i\n    arr[i] = n;\n}\n```\n\n```cpp\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\nvoid insertMiddle(int arr[], int i, int n, int length) {\n    // Shift starting from the end to i.\n    for (int index = length - 1; index >= i; index--) {\n        arr[index + 1] = arr[index];\n    }\n    // Insert at i\n    arr[i] = n;\n}\n```\n\n```javascript\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\ninsertMiddle(arr, i, n, length) {\n    // Shift starting from the end to i.\n    for (let index = length - 1; index > i - 1; index--) {\n        arr[index + 1] = arr[index];\n    }\n    //Insert at i\n    arr[i] = n;\n}\n```\n\n```csharp\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\npublic void InsertMiddle(int[] arr, int i, int n, int length) {\n    // Shift starting from the end to i.\n    for (int index = length - 1; index > i - 1; index--) {\n        arr[index + 1] = arr[index];\n    }\n    // Insert at i\n    arr[i] = n;\n}\n```\n\n```swift\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full\nfunc insertMiddle(_ arr: inout [Int], _ i: Int, _ n: Int, _ length: Int) {\n  // Shift starting from the end to i\n  for index in stride(from: length - 1, through: i, by: -1) {\n    arr[index + 1] = arr[index]\n  }\n\n  // Insert at i\n  arr[i] = n\n}\n```\n\n```go\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\nfunc insertMiddle(arr []int, i, n, length int) []int {\n    // Shift starting from the end to i.\n    for index := length - 1; index > i-1; index-- {\n        arr[index+1] = arr[index]\n    }\n    // Insert at i\n    arr[i] = n\n    return arr\n}\n```\n\n```kotlin\n// Insert n into index i after shifting elements to the right.\n// Assuming i is a valid index and arr is not full.\nfun insertMiddle(arr: IntArray, i: Int, n: Int, length: Int) {\n    // Shift starting from the end to i.\n    for (index in length - 1 downTo i) {\n        arr[index + 1] = arr[index]\n    }\n    // Insert at i\n    arr[i] = n\n}\n```\n\n::tabs-end\n\nThe below image visualizes the insertion of `8` at index `1` in the array `[4, 5, 6]`. Since we don't have enough space to keep the last element `6`, it is lost.\n\n![insertion-at-i](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/50e76532-cea7-4680-1cde-0e4756477800/sharpen=1)\n\n> The visual above demonstrates that shifting occurs prior to insertion to ensure values are not overwritten.\n\n## Time Complexity \n\n| Operation | Big-O Time | Notes                                        |\n| --------- | ---------- | -------------------------------------------- |\n| Reading   | $O(1)$     |                                              |\n| Insertion | $O(n)$\\*   | If inserting at the end of the array, $O(1)$ |\n| Deletion  | $O(n)$\\*   | If deleting at the end of the array, $O(1)$  |\n\n## Closing Notes\n\nThe operations we discussed above are *absolutely critical* for solving a lot of interview problems. In fact, the key to solving many problems is being able to implement the insert middle and delete middle operations efficiently.\n\nThere are some suggested problems listed above. If you are a beginner you may find them challenging. That's completely okay, your goal should be to understand the concepts and the operations we discussed above. The solution code and video explanation are provided for each problem.\n"
+    // }
+    const md = {
+        "data": "# NoSQL\n\nNoSQL stands for \"Not Only SQL\". These databases are fundamentally different from SQL databases - they don't organize data in tables and hence, you can't use SQL syntax for complex queries and joins. They are much more flexible and scalable than SQL databases and were designed to overcome the limitations of SQL databases, which have certain constraints in terms of scalability and performance. SQL databases can be scaled vertically, but there are limitations to this method, as we have discussed before.\n\nNoSQL databases are specifically engineered to handle large-scale data and high-speed workloads. They can be scaled horizontally, which is a significant advantage when managing large applications. We will delve into the specifics of these benefits later in the article. For now, let's review the different types of NoSQL databases.\n\n## 1. Key-Value Databases\nA key-value database uses a simple key-value method to store data. Just like a hashmap, the database stores a collection of key-value pairs and the key serves as a unique identifier. Both the key and the value can range from simple objects to complex objects.\n\nUnlike relational databases, Key-Value databases are schemaless (meaning it manages information without the need for a blueprint) and different keys and values can have completely different structures. One key might be a string and map to a JSON object, and another be an integer and map to a list. Below is an example of what the structure for a key-value database could look like:\n\n```markdown\nKey: 'user:123'\nValue: name=John Doe, age=30, email=johndoe@example.com\n\nKey: 'product:456'\nValue: name=Widget, price=9.99, description=A useful widget for various purposes.\n\nKey: 'order:789'\nValue: customer_id=user:123, products=product:456|product:789, total_amount=29.98\n```\n\n> In the example above, for dictionaries (objects) in JSON, each attribute is represented as key=value, and for arrays, the elements are separated by vertical bars (|).\n\n> A good example of a key-value store is redis. Redis is an in-memory, key/value store and stores data in-memory. This makes Redis exceptionally fast for data retrieval since RAM is significantly faster compared to disk-based storage. Not all of the NoSQL databases store data in RAM, however.\n\n## 2. Document Databases\nDocument Databases store data as \"documents\". These \"documents\" are JSON-like. This makes it easier for developers to store and query data because the format that the database stores data in is the same document-model format developers use in their application code. It provides flexibility because individual fields in a document can be added or removed independently.\n\nBelow is an example of what a document database store might look like. Notice how the data stored can be as complex as it needs to be. The JSON-like object observed below has different nesting levels.\n\n```json\n{\n  \"field1\": {\n    \"onetype\" : [\n      {\"id\": 1, \"name\":\"John Doe\"},\n      {\"id\": 2, \"name\":\"Don Joeh\"},\n    ],\n    \"othertype\": {\"id\": 2, \"company\": \"ABC\"}\n    },\n    \"field2\": {\n    \"list1\": [[1,42],[2,2]]\n  }\n}\n```\n\n> An example of a document database is MongoDB. MongoDB will store data in JSON-like structures observed above.\n\n## 3. Wide-Column Database\n\nA wide-column database stores data in columns rather than rows, allowing for efficient storage and retrieval of large datasets. Instead of storing data in rows as in traditional relational databases, a wide column database stores data in columns. Each column corresponds to a specific attribute or field of the data. This structure not only enables high write throughput but also optimizes reads and aggregations over a particular subset of data, an operation that traditional row-based storage isn't designed for.\n\nThe real power of wide-column databases comes into play in scenarios requiring very large scale, such as internet search and web messaging systems. If an application needs to manage a lot of timestamp data, wide-column databases will excel in handling that. While we won't dive too deep—as these databases can get complex—it's crucial to note that they are specialized for certain use cases and may not be the best fit for every application.\n\nHere is what the timestamp example looks like in Apache Cassandra:\n\n```yaml\nRow Key: Location_ID (e.g., 'location1', 'location2', etc.)\n\nColumns:\n  - Timestamp1: Temperature1\n  - Timestamp2: Temperature2\n  - Timestamp3: Temperature3\n---\n- TimestampN: TemperatureN\n```\n\n> Another example of this is Cassandra and Google's BigTable. Bigtable is a fully managed wide-column and key-value NoSQL database service for large analytical and operational workloads as part of the Google Cloud portfolio. Cassandra, similar to BigTable, is designed to handle large amounts of data across many commodity servers, providing high availability with no single point of failure.\n\n## 4. Graph databases\nA graph database uses a graph like structure where each node refers to an entity. Much like the graphs we learned in algorithms, nodes in a graph database are connected to each other through edges or relationships. They can be used to represent various types of relationships, friendships and associations between entities.\n\nBy representing these entities as nodes, graph databases provide a flexible and intuitive way to model complex data structures and query the connections between entities efficiently.\n\nGraph databases are very useful when the data has complex relationships and interconnectedness. Facebook is a prime example of a use case where a graph database could be a good fit. Facebook's platform involves relationships between users. Friends, friends of friends, interests, hobbies. Graph databases would be more adept at modeling and querying various types of social interactions, comments, likes, shares and reactions. In that sense, we get an idea of when we might need a graph based database.\n\n![graph-based-database](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/6006d9f5-9043-4a96-d145-9c36684db000/sharpen=1)\n\n> The visual above demonstrates a graph based database applied to the Facebook example discussed before.\n\nLet's now dive deeper into why we need NoSQL databases.\n\n## A deeper dive into why we need NoSQL databases\n\nAs we discussed before, the biggest issue with SQL databases is scale and the restrictions. Because there are no foreign key or join constraints, the data can be split and stored on different servers. This means half the data can be stored on one database, in one part of the world and the other half can be stored on another database, in a totally different part of the world. NoSQL databases are designed with distributed architecture in mind. They are often built to handle large amounts of data across multiple nodes from the ground up.\n\n> Dropping the foreign key constraint allows this because we don't have to cross reference data between tables, which can be inefficient.\n\nAnother key concept we discussed in relational databases was the acronym ACID. Can NoSQL databases be ACID-compliant? The answer is yes. For example, MongoDB is one of the NoSQL databases that is ACID-compliant. An acronym that is used with NoSQL databases is BASE. ACID focuses on strict consistency within the databases, BASE focuses more on eventual consistency (which we will explain soon). That is not to say that one is better than the other, but ACID is more common in SQL databases and BASE describes NoSQL databases better.\n\nBASE stands for \"Basically Available, Soft state, Eventual consistency\" - the 'eventual consistency' part is what we will focus on.\n\n## Eventual Consistency\n\nA mechanism that provides eventual consistency is the leader/follower architecture. Suppose that we have three database replicas and the query request to fetch the data can be directed to any one of these replicas. However, the first one may be said to be a primary database node. However, one of the nodes in the replica set will be a primary node. Updates and writes can only be done to the primary node and the primary node _eventually_ updates the rest of the nodes. In this case, the primary node can be said to be the `leader` and the rest of the nodes being the `followers`.\n\nBecause the nodes, apart from the primary node are only eventually being updated, there might be times when a user requests data and it is stale. This can be true in apps like Twitter or Instagram where updating the follower count may be delayed because the leader node has not updated the rest of the nodes.\n\n![eventual-consistency](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/b37d66bf-a631-4d1b-e6bd-c178e174d200/sharpen=1)\n\n![strict-consistency](https://imagedelivery.net/CLfkmk9Wzy8_9HRyug4EVA/889193df-f5d0-4c46-7495-f5b916be2c00/sharpen=1)\n\n> The visuals above demonstrate the difference between strict and eventual consistency. \n\n> Another term used for leader/follower is the master/slave architecture.\n"
+    }
+
+
+////////////////////////
+function escapeHtml(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function renderTabs(block) {
+
+    const langs = [];
+    const codes = [];
+
+    const codeRegex = /```([\w#+-]+)\r?\n([\s\S]*?)```/g;
+
+    let m;
+
+    while ((m = codeRegex.exec(block)) !== null) {
+        langs.push(m[1]);
+        codes.push(m[2].trimEnd());
+    }
+
+    return `
+<div class="code-tabs">
+
+    <div class="tab-bar">
+
+        ${langs.map((l,i)=>`
+            <button class="${i===0?"active":""}"
+                    data-index="${i}">
+                ${l}
+            </button>
+        `).join("")}
+
+    </div>
+
+    ${codes.map((c,i)=>`
+
+<div class="tab-content ${i===0?"active":""}">
+
+<pre><code class="language-${langs[i]}">${escapeHtml(c)}</code></pre>
+
+</div>
+
+`).join("")}
+
+</div>
+`;
+}
+
+function renderYoutube(html){
+
+    const src = html.match(/src="([^"]+)"/);
+
+    if(!src) return html;
+
+    const embed = src[1];
+
+    const id = embed.match(/embed\/([^?"]+)/)?.[1];
+
+    if(!id) return html;
+
+    return `
+<a class="youtube-card"
+   target="_blank"
+   href="https://www.youtube.com/watch?v=${id}">
+
+<img
+src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+
+<div class="play">
+▶ Watch Video
+</div>
+
+</a>
+`;
+}
+
+function preprocess(md){
+
+    const specials=[];
+
+    md=md.replace(
+        /<iframe[\s\S]*?<\/iframe>/g,
+        match=>{
+
+            const id=specials.length;
+
+            specials.push(renderYoutube(match));
+
+            return `@@SPECIAL_${id}@@`;
+
+        });
+
+    md=md.replace(
+        /::tabs-start\r?\n([\s\S]*?)::tabs-end/g,
+        (_,block)=>{
+
+            const id=specials.length;
+
+            specials.push(renderTabs(block));
+
+            return `@@SPECIAL_${id}@@`;
+
+        });
+
+    let html=marked.parse(md);
+
+    html=html.replace(
+        /@@SPECIAL_(\d+)@@/g,
+        (_,id)=>specials[id]);
+
+    return html;
+}
+function wireTabs() {
+    document.querySelectorAll(".code-tabs").forEach(tab=>{
+
+        const buttons=tab.querySelectorAll(".tab-bar button");
+        const pages=tab.querySelectorAll(".tab-content");
+
+        buttons.forEach((btn,i)=>{
+
+            btn.onclick=()=>{
+
+                buttons.forEach(b=>b.classList.remove("active"));
+                pages.forEach(p=>p.classList.remove("active"));
+
+                btn.classList.add("active");
+                pages[i].classList.add("active");
+
+                Prism.highlightAllUnder(pages[i]);
+
+            };
+
+        });
+
+    });
+}
+////////////////////////
+
+
+
+////////////////////////
+
+content.innerHTML = preprocess(md.data);
+
+renderMathInElement(content,{
+    delimiters:[
+        {left:"$$",right:"$$",display:true},
+        {left:"$",right:"$",display:false}
+    ]
+});
+
+Prism.highlightAll();
+
+wireTabs();
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/prism.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-java.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-cpp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-csharp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-go.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-kotlin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-swift.min.js"></script>
+</body>
+</html>
