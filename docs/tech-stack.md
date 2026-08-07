@@ -1,23 +1,24 @@
 # Tech Stack
 
 Chosen stack, pinned to specific versions where a version is meaningful.
-Versions below were the current stable releases at time of writing (checked
-against npm/project release pages) — **re-verify the exact patch number
-against the registry when actually scaffolding** (`npm view <pkg> version`),
-these move weekly; what's locked in is the major/minor line and the
-reasoning, not the literal patch digit.
 
-No application code or `package.json` exists yet — this is the target for
-whenever scaffolding starts, not a record of something already set up.
+**The scaffold now exists** (see root [README.md](../README.md) for how to
+run it) — `package.json` is the actual source of truth for exact installed
+versions; the table below is kept in sync with it, but if the two ever
+drift, trust `package.json`. Two entries below (`vite`, `electron`) had to
+deviate from the originally-targeted line once real installation was
+attempted — see "Deviations from the original target" at the bottom for
+why, before assuming a newer number is simply better.
 
-| Package | Target version | Role |
+| Package | Pinned version | Role |
 |---|---|---|
-| `electron` | `41.x` (latest stable line) | desktop shell, native file/video access |
+| `electron` | `30.5.1` (not `41.x` — see deviations) | desktop shell, native file/video access |
 | `react` / `react-dom` | `19.2.x` | UI |
-| `vite` | `8.x` | dev server + renderer bundler |
-| `electron-vite` | `5.x` | wires Vite's build/HMR to Electron's main + preload + renderer processes |
+| `vite` | `7.3.x` (not `8.x` — see deviations) | dev server + renderer bundler |
+| `electron-vite` | `5.0.0` | wires Vite's build/HMR to Electron's main + preload + renderer processes |
+| `@vitejs/plugin-react` | `5.2.x` | React fast-refresh plugin for Vite (not part of the original list — required by `electron-vite`) |
 | `typescript` | `5.9.x` (latest **5.x**, not 7.x) | types |
-| `tailwindcss` | `4.3.x` | styling |
+| `tailwindcss` / `@tailwindcss/vite` | `4.3.x` | styling |
 | `shadcn/ui` | n/a — CLI, not a pinned dependency | UI components (see below) |
 | `react-router` | `7.18.x`, **declarative/data mode**, not framework mode | in-app navigation |
 | `zustand` | `5.0.x` | UI/session state |
@@ -27,6 +28,8 @@ whenever scaffolding starts, not a record of something already set up.
 | `prismjs` | `1.30.x` (**not** an early v2) | syntax highlighting |
 | `fuse.js` | `7.5.x` | fuzzy search across courses/lessons/cheatsheets |
 | `electron-builder` | `26.x` | packaging/distribution |
+| `eslint` | `10.8.x` (bumped from the originally-assumed `9.x`) | linting |
+| `prettier` | `3.9.x` | formatting |
 
 ## Non-obvious choices, explained
 
@@ -87,5 +90,42 @@ treated as that one entry being unavailable, not a fatal error.
 **Vite's Node requirement is a build-machine concern, not a shipped-app
 one.** Vite only runs at dev/build time; Electron bundles its own Node.js
 runtime for the packaged app's main process. Don't conflate "what Node
-version does Vite 8 need on the machine running `npm run build`" with
-"what Node version ships inside the `.exe`/`.app`" — they're unrelated.
+version does Vite need on the machine running `npm run build`" with "what
+Node version ships inside the `.exe`/`.app`" — they're unrelated.
+
+## Deviations from the original target (found during actual scaffolding)
+
+Picking versions from release pages (as the table above originally did) and
+actually installing them are different exercises — two conflicts only
+showed up once `npm install` was run for real:
+
+- **Vite is `7.3.x`, not `8.x`.** `electron-vite@5.0.0`'s `peerDependencies`
+  cap Vite at `^5.0.0 || ^6.0.0 || ^7.0.0` — it doesn't support Vite 8 yet.
+  Forcing 8 would mean an untested/broken pairing with the one tool that
+  bridges Vite and Electron. `@vitejs/plugin-react` is pinned to `5.2.x`
+  for the same reason (its `6.x` line requires Vite 8). Revisit once
+  `electron-vite` publishes a release supporting Vite 8.
+- **Electron is `30.5.1`, not `41.x`.** Electron 39+ ships a native
+  zip-extraction helper binary as part of its own `npm install` step.
+  On the machine this was scaffolded on, a Windows Application Control
+  policy blocks that specific binary from executing — confirmed to fail
+  identically regardless of install location (repo root vs. a temp
+  folder), so it's a policy match on the file itself, not a path rule.
+  Electron 30.x predates that native helper and installs cleanly.
+  **Tradeoff, not a free lunch:** `npm audit` flags the accumulated CVEs
+  fixed between Electron 30 and the current release (mostly
+  sandbox/context-bridge/IPC edge cases — see the advisory list `npm audit`
+  prints). This app's exposure is narrower than a typical Electron app
+  (fully offline, never navigates to a remote/untrusted origin, renders
+  only first-party bundled `DATA/` content — see decisions.md's Data &
+  scope and Rendering sections), but "narrower" isn't "zero." Actually
+  closing this gap means either getting the Application Control policy on
+  the dev machine to allow that binary, or finding a different Electron
+  install path — not something to route around by disabling the policy.
+  **Revisit this pin periodically**, not just once.
+- **ESLint is `10.8.x`, not `9.x`.** The original table assumed 9.x because
+  that was ESLint's latest at the time of the first documentation pass;
+  by the time of scaffolding, 10.x was already the current stable and
+  every plugin in use (`typescript-eslint`, `eslint-plugin-react-hooks`,
+  `eslint-plugin-react-refresh`, `eslint-config-prettier`) supports it —
+  simple version drift, not a compatibility conflict like the two above.

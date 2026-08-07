@@ -4,11 +4,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-**No application code exists yet.** This repo currently contains only scraped source data (`DATA/`),
-a rendering-pipeline prototype (`test.html`), and a documentation pass done *before* implementation.
-If you're asked to "start building" or "implement the app", read all of `docs/` first — it is the
-spec, including the chosen tech stack. Do not re-derive the data model, rendering approach, or stack
-from scratch; it's already been fully reverse-engineered and decided.
+**Scaffolded, no application features yet.** A minimal Electron + React app exists (`src/main`,
+`src/preload`, `src/renderer`) and launches successfully — see README.md for how to run it — but it
+renders only a placeholder screen. No lesson browsing, no `DATA/` parsing, no profiles, no video
+player, no rendering pipeline: none of that is implemented. If you're asked to "start building" or
+"implement the app", read all of `docs/` first — it is the spec, including the chosen tech stack
+and exactly what the scaffold does and doesn't do yet. Do not re-derive the data model, rendering
+approach, or stack from scratch; it's already been fully reverse-engineered and decided. Also
+contains scraped source data (`DATA/`, gitignored) and a rendering-pipeline prototype (`test.html`)
+from before the scaffold existed.
+
+## Development commands
+
+```
+npm install       # install dependencies
+npm run dev       # launch the app (electron-vite dev server + Electron, with HMR)
+npm run build     # type-checked production build (electron-vite build)
+npm run typecheck # tsc --noEmit across both the main/preload and renderer TS projects
+npm run lint      # eslint . --max-warnings 0
+npm run format    # prettier --write .
+npm run format:check
+npm run dist      # build + electron-builder package (not yet run/verified — see tech-stack.md)
+```
+
+No test framework is set up yet — none was requested and none exists. Ask before adding one.
 
 ## What this project is
 

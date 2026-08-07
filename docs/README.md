@@ -63,4 +63,7 @@ that needed a human call surfaced and answered rather than silently guessed.
   Fuse.js + electron-builder — see tech-stack.md for versions and the
   reasoning behind the less-obvious picks.
 
-No application code was written as part of this documentation pass.
+No application code was written as part of this documentation pass — the scaffold (Electron +
+React, launches but has no features yet) was added in a later pass, once this spec existed to
+scaffold against. See the root [README.md](../README.md) for how to run it, and
+[tech-stack.md](./tech-stack.md) for exactly what got installed vs. originally targeted.

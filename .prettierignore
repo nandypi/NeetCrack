@@ -1,0 +1,13 @@
+node_modules
+out
+dist
+build
+DATA
+user-data
+package-lock.json
+
+# Prose docs and the legacy rendering prototype are hand-authored content,
+# not application code — out of scope for the code formatter.
+*.md
+docs/
+test.html
