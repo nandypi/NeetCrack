@@ -1,14 +1,27 @@
-import { contextBridge } from 'electron'
-import { versions } from 'node:process'
+import { contextBridge, ipcRenderer } from 'electron'
+import type { Category, ContentResult, CourseDetail } from '@shared/domain'
 
-// Minimal proof that main -> preload -> renderer wiring works end to end.
-// Real app APIs (DATA/ access, user-data/ read-write, etc.) are added when
-// those features are implemented, not part of this scaffold.
+// The renderer's entire view of DATA/ is this `content` surface — plain
+// domain models in, no filesystem/jsonPath/problemBased details ever cross
+// this boundary. Future features (lessons, profiles, search, progress) add
+// their own narrow surfaces here the same way, backed by their own
+// main-process repository.
+//
+// `process` below is Electron's sandboxed-preload global, used directly:
+// both `import process from 'node:process'` (unresolved node: prefix) and
+// `import { versions } from 'process'` (redeclares the existing global,
+// SyntaxError) fail to load in this sandboxed context.
 const api = {
   versions: {
-    chrome: versions.chrome,
-    node: versions.node,
-    electron: versions.electron
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+    electron: process.versions.electron
+  },
+  content: {
+    listCategories: (): Promise<ContentResult<Category[]>> =>
+      ipcRenderer.invoke('content:listCategories'),
+    getCourse: (courseId: string): Promise<ContentResult<CourseDetail>> =>
+      ipcRenderer.invoke('content:getCourse', courseId)
   }
 }
 

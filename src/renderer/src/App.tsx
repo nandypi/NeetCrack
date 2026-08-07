@@ -1,29 +1,19 @@
-import { cn } from '@renderer/lib/utils'
+import { Link, Outlet } from 'react-router'
 
-// Placeholder root screen. Proves the scaffold launches end to end
-// (main -> preload -> renderer, Tailwind, React Router) — no application
-// features live here yet; see docs/ for what's planned.
+// App shell — header + content outlet. Kept as the persistent layout even
+// though the header is minimal today; profile switching, search, and
+// settings all land here later without restructuring routing.
 function App(): React.JSX.Element {
-  const versions = window.api?.versions
-
   return (
-    <div
-      className={cn(
-        'flex min-h-screen flex-col items-center justify-center gap-2 bg-neutral-950 text-neutral-100'
-      )}
-    >
-      <h1 className="text-2xl font-semibold">NeetCrack</h1>
-      <p className="text-sm text-neutral-400">Scaffold running — no application features yet.</p>
-      {versions ? (
-        <p className="text-xs text-neutral-500">
-          Electron {versions.electron} · Chrome {versions.chrome} · Node {versions.node}
-        </p>
-      ) : (
-        <p className="text-xs text-amber-500">
-          window.api is unavailable — this page isn't running inside the Electron renderer (e.g.
-          opened directly in a browser instead of the Electron window that npm run dev launches).
-        </p>
-      )}
+    <div className="flex min-h-screen flex-col bg-neutral-950 text-neutral-100">
+      <header className="border-b border-neutral-800 px-6 py-4">
+        <Link to="/" className="text-lg font-semibold tracking-tight">
+          NeetCrack
+        </Link>
+      </header>
+      <main className="flex-1">
+        <Outlet />
+      </main>
     </div>
   )
 }

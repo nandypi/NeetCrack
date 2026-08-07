@@ -29,5 +29,21 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
     }
   },
+  {
+    // Route modules co-locate a `loader` export with the route component —
+    // the idiomatic React Router v7 data-mode pattern, not an accident.
+    files: ['src/renderer/src/routes/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off'
+    }
+  },
+  {
+    // shadcn/ui CLI-generated components; kept close to upstream rather
+    // than hand-diverging to satisfy this lint rule.
+    files: ['src/renderer/src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off'
+    }
+  },
   eslintConfigPrettier
 )

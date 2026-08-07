@@ -1,6 +1,6 @@
-DATA
-DATA.zip
-user-data
+/DATA
+/DATA.zip
+/user-data
 
 node_modules
 out

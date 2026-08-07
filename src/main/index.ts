@@ -1,5 +1,7 @@
 import { join } from 'node:path'
 import { app, BrowserWindow, shell } from 'electron'
+import { registerContentIpc } from './ipc/content'
+import { ContentRepository } from './repository/content-repository'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -33,6 +35,7 @@ function createWindow(): void {
 }
 
 void app.whenReady().then(() => {
+  registerContentIpc(new ContentRepository())
   createWindow()
 
   app.on('activate', () => {
