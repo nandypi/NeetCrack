@@ -37,4 +37,50 @@ export interface CourseDetail extends CourseSummary {
   sectionsAvailable: boolean
 }
 
+export interface CodeSample {
+  language: string
+  code: string
+}
+
+export interface SuggestedProblem {
+  slug: string
+  url: string
+}
+
+export interface LessonNavRef {
+  sectionName: string
+  lessonName: string
+}
+
+interface LessonDetailBase {
+  courseId: string
+  courseTitle: string
+  sectionName: string
+  name: string
+  previous: LessonNavRef | null
+  next: LessonNavRef | null
+}
+
+export interface VideoLessonDetail extends LessonDetailBase {
+  kind: 'video'
+  durationMinutes?: number
+  videoUrl: string | null
+  videoAvailable: boolean
+  articleMarkdown: string
+  articleAvailable: boolean
+  code: CodeSample[]
+  codeAvailable: boolean
+  suggestedProblems: SuggestedProblem[]
+}
+
+export interface ProblemLessonDetail extends LessonDetailBase {
+  kind: 'problem'
+  problemId: string
+  descriptionMarkdown: string
+  solutions: CodeSample[]
+  contentAvailable: boolean
+}
+
+export type LessonDetail = VideoLessonDetail | ProblemLessonDetail
+
 export type ContentResult<T> = { ok: true; data: T } | { ok: false; error: string }

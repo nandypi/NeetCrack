@@ -5,6 +5,7 @@ import App from './App'
 import RouteError from '@renderer/components/RouteError'
 import Home, { homeLoader } from '@renderer/routes/Home'
 import Course, { courseLoader } from '@renderer/routes/Course'
+import Lesson, { lessonLoader } from '@renderer/routes/Lesson'
 import './index.css'
 
 // Hash routing, not createBrowserRouter: the renderer is loaded from a
@@ -17,7 +18,12 @@ const router = createHashRouter([
     errorElement: <RouteError />,
     children: [
       { index: true, element: <Home />, loader: homeLoader },
-      { path: 'course/:courseId', element: <Course />, loader: courseLoader }
+      { path: 'course/:courseId', element: <Course />, loader: courseLoader },
+      {
+        path: 'course/:courseId/lesson/:sectionName/:lessonName',
+        element: <Lesson />,
+        loader: lessonLoader
+      }
     ]
   }
 ])

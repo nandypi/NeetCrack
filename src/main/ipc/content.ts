@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import type { ContentRepository } from '../repository/content-repository'
-import type { Category, ContentResult, CourseDetail } from '@shared/domain'
+import type { Category, ContentResult, CourseDetail, LessonDetail } from '@shared/domain'
 
 function toErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
@@ -26,6 +26,26 @@ export function registerContentIpc(repository: ContentRepository): void {
           return { ok: false, error: `Course not found: ${courseId}` }
         }
         return { ok: true, data: course }
+      } catch (error) {
+        return { ok: false, error: toErrorMessage(error) }
+      }
+    }
+  )
+
+  ipcMain.handle(
+    'content:getLesson',
+    async (
+      _event,
+      courseId: string,
+      sectionName: string,
+      lessonName: string
+    ): Promise<ContentResult<LessonDetail>> => {
+      try {
+        const lesson = await repository.getLesson(courseId, sectionName, lessonName)
+        if (!lesson) {
+          return { ok: false, error: `Lesson not found: ${courseId}/${sectionName}/${lessonName}` }
+        }
+        return { ok: true, data: lesson }
       } catch (error) {
         return { ok: false, error: toErrorMessage(error) }
       }

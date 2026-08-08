@@ -78,3 +78,34 @@ export const ProblemManifestSchema = z.object({
 })
 
 export type RawProblemManifest = z.infer<typeof ProblemManifestSchema>
+
+// Lesson-content files (docs/data-model.md §5-7). Schemas are scoped to the
+// fields the normalizer actually reads, not the full raw shape — problem.json
+// in particular carries many judge/analytics fields (test_cases,
+// submissionHistory, company_tags, ...) the app never reads (see
+// decisions.md: "viewer, not a judge/grader"); safeParse silently strips
+// unrecognized keys, so there's no need to model dead fields just to satisfy
+// validation.
+
+export const ArticleSchema = z.object({
+  data: z.string()
+})
+
+export type RawArticle = z.infer<typeof ArticleSchema>
+
+export const CodeSchema = z.object({
+  data: z.record(z.string(), z.string())
+})
+
+export type RawCode = z.infer<typeof CodeSchema>
+
+export const ProblemSchema = z.object({
+  data: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    solutions: z.record(z.string(), z.string())
+  })
+})
+
+export type RawProblem = z.infer<typeof ProblemSchema>

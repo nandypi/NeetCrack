@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "fuse.js": "^7.5.0",
+    "github-markdown-css": "^5.9.0",
     "katex": "^0.18.1",
     "marked": "^18.0.9",
     "prismjs": "^1.30.0",

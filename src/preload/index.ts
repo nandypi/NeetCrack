@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { Category, ContentResult, CourseDetail } from '@shared/domain'
+import type { Category, ContentResult, CourseDetail, LessonDetail } from '@shared/domain'
 
 // The renderer's entire view of DATA/ is this `content` surface — plain
 // domain models in, no filesystem/jsonPath/problemBased details ever cross
@@ -21,7 +21,13 @@ const api = {
     listCategories: (): Promise<ContentResult<Category[]>> =>
       ipcRenderer.invoke('content:listCategories'),
     getCourse: (courseId: string): Promise<ContentResult<CourseDetail>> =>
-      ipcRenderer.invoke('content:getCourse', courseId)
+      ipcRenderer.invoke('content:getCourse', courseId),
+    getLesson: (
+      courseId: string,
+      sectionName: string,
+      lessonName: string
+    ): Promise<ContentResult<LessonDetail>> =>
+      ipcRenderer.invoke('content:getLesson', courseId, sectionName, lessonName)
   }
 }
 

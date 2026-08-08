@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import 'github-markdown-css/github-markdown-dark.css';
+@import 'katex/dist/katex.min.css';
 
 /* shadcn/ui theme tokens — single dark theme (matches the app's existing
    hand-styled neutral-950/900/800 palette; no light-mode/theme toggle is
@@ -77,4 +79,89 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Article/problem markdown rendering — ported from test.html's inline
+   <style> block (see docs/rendering-pipeline.md). .markdown-body's base
+   typography comes from github-markdown-dark.css above; this overrides its
+   background to match the app shell and adds the code-tabs/youtube-card
+   widgets that github-markdown-css doesn't know about. */
+.markdown-body {
+  background: transparent;
+}
+
+.code-tabs {
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1e1e1e;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  background: #171717;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab-bar button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted-foreground);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.tab-bar button:hover {
+  color: var(--foreground);
+  background: #262626;
+}
+
+.tab-bar button.active {
+  color: var(--foreground);
+  background: #1e1e1e;
+  border-bottom: 3px solid #3b82f6;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-content pre {
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.youtube-card {
+  position: relative;
+  display: block;
+  margin: 24px 0;
+}
+
+.youtube-card img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+.youtube-card .play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  text-shadow: 0 0 20px black;
+  pointer-events: none;
 }

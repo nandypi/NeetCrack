@@ -1,5 +1,6 @@
 import { Link, useLoaderData, type LoaderFunctionArgs } from 'react-router'
 import { fetchCourse } from '@renderer/lib/content-client'
+import { lessonPath } from '@renderer/lib/routes'
 import { Badge } from '@renderer/components/ui/badge'
 import {
   Accordion,
@@ -59,16 +60,18 @@ function Course(): React.JSX.Element {
                 <AccordionContent>
                   <ul className="divide-y divide-neutral-800">
                     {section.lessons.map((lesson) => (
-                      <li
-                        key={lesson.name}
-                        className="flex items-center justify-between py-2 text-sm text-neutral-300"
-                      >
-                        <span>{lesson.name}</span>
-                        {lesson.durationMinutes ? (
-                          <span className="text-xs text-neutral-500">
-                            {lesson.durationMinutes} min
-                          </span>
-                        ) : null}
+                      <li key={lesson.name}>
+                        <Link
+                          to={lessonPath(course.id, section.name, lesson.name)}
+                          className="flex items-center justify-between py-2 text-sm text-neutral-300 hover:text-neutral-100"
+                        >
+                          <span>{lesson.name}</span>
+                          {lesson.durationMinutes ? (
+                            <span className="text-xs text-neutral-500">
+                              {lesson.durationMinutes} min
+                            </span>
+                          ) : null}
+                        </Link>
                       </li>
                     ))}
                   </ul>
