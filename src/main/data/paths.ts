@@ -6,6 +6,10 @@ export function getDataDir(): string {
   return join(app.getAppPath(), 'DATA')
 }
 
+export function getUserDataDir(): string {
+  return join(app.getAppPath(), 'user-data')
+}
+
 // Joins a relative path (e.g. a manifest's jsonPath from Categories.json)
 // onto DATA/ and guards against it resolving outside DATA/, since this
 // value crosses the IPC boundary from the renderer even though today's

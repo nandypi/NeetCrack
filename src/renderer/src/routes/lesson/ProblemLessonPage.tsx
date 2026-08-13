@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/components/u
 import LessonNav from '@renderer/components/lesson/LessonNav'
 import CodeTabs from '@renderer/components/lesson/CodeTabs'
 import MarkdownRenderer from '@renderer/components/markdown/MarkdownRenderer'
+import MarkCompletedCheckbox from '@renderer/components/lesson/MarkCompletedCheckbox'
 import type { ProblemLessonDetail } from '@shared/domain'
 
 function ProblemLessonPage({ lesson }: { lesson: ProblemLessonDetail }): React.JSX.Element {
@@ -15,9 +16,12 @@ function ProblemLessonPage({ lesson }: { lesson: ProblemLessonDetail }): React.J
         ← {lesson.courseTitle}
       </Link>
 
-      <div className="mt-4">
-        <h1 className="text-2xl font-semibold">{lesson.name}</h1>
-        <p className="mt-1 text-sm text-neutral-400">{lesson.sectionName}</p>
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold">{lesson.name}</h1>
+          <p className="mt-1 text-sm text-neutral-400">{lesson.sectionName}</p>
+        </div>
+        <MarkCompletedCheckbox lessonKey={lesson.key} />
       </div>
 
       <div className="mt-8">

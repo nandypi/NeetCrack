@@ -2,6 +2,8 @@ import { join } from 'node:path'
 import { app, BrowserWindow, shell } from 'electron'
 import { registerContentIpc } from './ipc/content'
 import { ContentRepository } from './repository/content-repository'
+import { ProfileRepository } from './repository/profile-repository'
+import { registerProfileIpc } from './ipc/profiles'
 // Registers the neetcrack-video:// scheme's privileges — must be imported
 // (and thus run) before app.whenReady(), see video-protocol.ts.
 import { registerVideoProtocol } from './video-protocol'
@@ -41,6 +43,7 @@ function createWindow(): void {
 void app.whenReady().then(() => {
   registerVideoProtocol()
   registerContentIpc(new ContentRepository())
+  registerProfileIpc(new ProfileRepository())
   createWindow()
 
   app.on('activate', () => {

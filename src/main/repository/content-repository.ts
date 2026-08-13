@@ -84,7 +84,7 @@ export class ContentRepository {
     try {
       const manifestRaw = await readJsonFile(resolveDataPath(entry.jsonPath))
       const manifest = parseCourseManifest(manifestRaw, entry.problemBased)
-      const sections = normalizeManifestSections(manifest, entry.problemBased)
+      const sections = normalizeManifestSections(manifest, entry.problemBased, entry.id)
       return { ...summary, sections, sectionsAvailable: true }
     } catch {
       return { ...summary, sections: [], sectionsAvailable: false }
@@ -107,12 +107,17 @@ export class ContentRepository {
 
     const manifestRaw = await readJsonFile(resolveDataPath(entry.jsonPath))
     const manifest = parseCourseManifest(manifestRaw, entry.problemBased)
-    const sections = normalizeManifestSections(manifest, entry.problemBased)
+    const sections = normalizeManifestSections(manifest, entry.problemBased, entry.id)
     const { previous, next, found } = buildLessonNavRefs(sections, sectionName, lessonName)
     if (!found) return null
 
     const lessonDir = await resolveLessonDir(entry.jsonPath, sectionName, lessonName)
     const shared = {
+      lessonKey:
+        sections
+          .find((section) => section.name === sectionName)
+          ?.lessons.find((lesson) => lesson.name === lessonName)?.key ??
+        `${entry.id}::${sectionName}::${lessonName}`,
       courseId: entry.id,
       courseTitle: entry.title,
       sectionName,

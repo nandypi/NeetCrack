@@ -41,10 +41,11 @@ export function normalizeCategories(raw: RawCategoriesFile): Category[] {
   }))
 }
 
-function normalizeVideoSections(raw: RawVideoManifest): Section[] {
+function normalizeVideoSections(raw: RawVideoManifest, courseId: string): Section[] {
   return raw.data.sections.map((section) => ({
     name: section.name,
     lessons: section.lessons.map((lesson) => ({
+      key: `${courseId}::${section.name}::${lesson.name}`,
       name: lesson.name,
       durationMinutes: lesson.length
     }))
@@ -54,17 +55,18 @@ function normalizeVideoSections(raw: RawVideoManifest): Section[] {
 function normalizeProblemSections(raw: RawProblemManifest): Section[] {
   return raw.data.sections.map((section) => ({
     name: section.name,
-    lessons: section.lessons.map((lesson) => ({ name: lesson.name }))
+    lessons: section.lessons.map((lesson) => ({ key: lesson.id, name: lesson.name }))
   }))
 }
 
 export function normalizeManifestSections(
   raw: RawVideoManifest | RawProblemManifest,
-  problemBased: boolean
+  problemBased: boolean,
+  courseId: string
 ): Section[] {
   return problemBased
     ? normalizeProblemSections(raw as RawProblemManifest)
-    : normalizeVideoSections(raw as RawVideoManifest)
+    : normalizeVideoSections(raw as RawVideoManifest, courseId)
 }
 
 // Bare LeetCode slugs (e.g. "maximum-subarray/") -> a slug (stable key for
@@ -114,6 +116,7 @@ export interface VideoLessonRawFields {
 }
 
 export interface VideoLessonSources {
+  lessonKey: string
   courseId: string
   courseTitle: string
   sectionName: string
@@ -129,6 +132,7 @@ export interface VideoLessonSources {
 export function normalizeVideoLessonDetail(sources: VideoLessonSources): VideoLessonDetail {
   return {
     kind: 'video',
+    key: sources.lessonKey,
     courseId: sources.courseId,
     courseTitle: sources.courseTitle,
     sectionName: sources.sectionName,
@@ -147,6 +151,7 @@ export function normalizeVideoLessonDetail(sources: VideoLessonSources): VideoLe
 }
 
 export interface ProblemLessonSources {
+  lessonKey: string
   courseId: string
   courseTitle: string
   sectionName: string
@@ -160,6 +165,7 @@ export function normalizeProblemLessonDetail(sources: ProblemLessonSources): Pro
   const problem = sources.problem.available ? sources.problem.raw.data : null
   return {
     kind: 'problem',
+    key: sources.lessonKey,
     courseId: sources.courseId,
     courseTitle: sources.courseTitle,
     sectionName: sources.sectionName,

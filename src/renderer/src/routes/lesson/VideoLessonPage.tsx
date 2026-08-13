@@ -28,7 +28,7 @@ function VideoLessonPage({ lesson }: { lesson: VideoLessonDetail }): React.JSX.E
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <MarkCompletedCheckbox />
+          <MarkCompletedCheckbox lessonKey={lesson.key} />
           {lesson.codeAvailable && <CodePanel code={lesson.code} />}
         </div>
       </div>
@@ -38,7 +38,7 @@ function VideoLessonPage({ lesson }: { lesson: VideoLessonDetail }): React.JSX.E
       </div>
 
       <div className="mt-8">
-        <SuggestedProblems problems={lesson.suggestedProblems} />
+        <SuggestedProblems problems={lesson.suggestedProblems} lessonKey={lesson.key} />
       </div>
 
       <div className="mt-10 border-t border-neutral-800 pt-8">

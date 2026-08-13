@@ -1,11 +1,9 @@
-import { useState } from 'react'
 import { Checkbox } from '@renderer/components/ui/checkbox'
+import { useProfileStore } from '@renderer/lib/profile-store'
 import type { SuggestedProblem } from '@shared/domain'
 
-// LeetCode slugs render as link text + a local "I did this" checkbox — no
-// judged content behind the slug (see docs/decisions.md#video--code). Links
-// open externally via the BrowserWindow's existing setWindowOpenHandler.
-// Checked state is UI-only, in-memory — no progress persistence this phase.
+const NO_COMPLETED_PROBLEMS: string[] = []
+
 function slugToTitle(slug: string): string {
   return slug
     .replace(/\/$/, '')
@@ -15,22 +13,19 @@ function slugToTitle(slug: string): string {
 }
 
 function SuggestedProblems({
-  problems
+  problems,
+  lessonKey
 }: {
   problems: SuggestedProblem[]
+  lessonKey: string
 }): React.JSX.Element | null {
-  const [done, setDone] = useState<ReadonlySet<string>>(new Set())
+  const doneSlugs = useProfileStore(
+    (state) => state.progress.suggestedProblemsDone[lessonKey] ?? NO_COMPLETED_PROBLEMS
+  )
+  const setSuggestedProblemDone = useProfileStore((state) => state.setSuggestedProblemDone)
+  const done = new Set(doneSlugs)
 
   if (problems.length === 0) return null
-
-  function toggle(slug: string): void {
-    setDone((prev) => {
-      const next = new Set(prev)
-      if (next.has(slug)) next.delete(slug)
-      else next.add(slug)
-      return next
-    })
-  }
 
   return (
     <div>
@@ -41,7 +36,9 @@ function SuggestedProblems({
             <Checkbox
               id={`suggested-${problem.slug}`}
               checked={done.has(problem.slug)}
-              onCheckedChange={() => toggle(problem.slug)}
+              onCheckedChange={(value) =>
+                void setSuggestedProblemDone(lessonKey, problem.slug, value === true)
+              }
             />
             <label htmlFor={`suggested-${problem.slug}`} className="text-sm text-neutral-300">
               <a

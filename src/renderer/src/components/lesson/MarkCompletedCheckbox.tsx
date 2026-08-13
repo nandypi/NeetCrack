@@ -1,14 +1,17 @@
-import { useState } from 'react'
 import { Checkbox } from '@renderer/components/ui/checkbox'
+import { useProfileStore } from '@renderer/lib/profile-store'
 
-// UI-only — no progress persistence this phase (see project scope).
-function MarkCompletedCheckbox(): React.JSX.Element {
-  const [completed, setCompleted] = useState(false)
+function MarkCompletedCheckbox({ lessonKey }: { lessonKey: string }): React.JSX.Element {
+  const completed = useProfileStore((state) => Boolean(state.progress.completed[lessonKey]))
+  const setLessonCompleted = useProfileStore((state) => state.setLessonCompleted)
 
   return (
     <label className="flex w-fit items-center gap-2 text-sm text-neutral-300">
-      <Checkbox checked={completed} onCheckedChange={(value) => setCompleted(value === true)} />
-      Mark as completed
+      <Checkbox
+        checked={completed}
+        onCheckedChange={(value) => void setLessonCompleted(lessonKey, value === true)}
+      />
+      {completed ? 'Completed' : 'Mark as completed'}
     </label>
   )
 }

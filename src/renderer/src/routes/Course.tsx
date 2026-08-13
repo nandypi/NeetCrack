@@ -1,4 +1,5 @@
 import { Link, useLoaderData, type LoaderFunctionArgs } from 'react-router'
+import { CheckCircle2, Circle } from 'lucide-react'
 import { fetchCourse } from '@renderer/lib/content-client'
 import { lessonPath } from '@renderer/lib/routes'
 import { Badge } from '@renderer/components/ui/badge'
@@ -10,6 +11,7 @@ import {
 } from '@renderer/components/ui/accordion'
 import CourseImage from '@renderer/components/CourseImage'
 import type { CourseDetail } from '@shared/domain'
+import { useProfileStore } from '@renderer/lib/profile-store'
 
 export async function courseLoader({ params }: LoaderFunctionArgs): Promise<CourseDetail> {
   if (!params.courseId) throw new Error('Missing courseId')
@@ -18,6 +20,12 @@ export async function courseLoader({ params }: LoaderFunctionArgs): Promise<Cour
 
 function Course(): React.JSX.Element {
   const course = useLoaderData() as CourseDetail
+  const completed = useProfileStore((state) => state.progress.completed)
+  const lessons = course.sections.flatMap((section) => section.lessons)
+  const completedCount = lessons.filter((lesson) => completed[lesson.key]).length
+  const completionPercentage = lessons.length
+    ? Math.round((completedCount / lessons.length) * 100)
+    : 0
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -40,6 +48,22 @@ function Course(): React.JSX.Element {
             <span>·</span>
             <span>{course.lessonCount} lessons</span>
           </div>
+          {course.sectionsAvailable ? (
+            <div className="mt-5 max-w-md">
+              <div className="mb-1.5 flex justify-between text-xs text-neutral-400">
+                <span>
+                  {completedCount} of {lessons.length} completed
+                </span>
+                <span>{completionPercentage}%</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-neutral-800">
+                <div
+                  className="h-full rounded-full bg-blue-500 transition-[width]"
+                  style={{ width: `${completionPercentage}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -54,7 +78,10 @@ function Course(): React.JSX.Element {
                 <AccordionTrigger>
                   <span>
                     {section.name}{' '}
-                    <span className="text-neutral-500">({section.lessons.length})</span>
+                    <span className="text-neutral-500">
+                      ({section.lessons.filter((lesson) => completed[lesson.key]).length}/
+                      {section.lessons.length})
+                    </span>
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -65,7 +92,14 @@ function Course(): React.JSX.Element {
                           to={lessonPath(course.id, section.name, lesson.name)}
                           className="flex items-center justify-between py-2 text-sm text-neutral-300 hover:text-neutral-100"
                         >
-                          <span>{lesson.name}</span>
+                          <span className="flex items-center gap-2">
+                            {completed[lesson.key] ? (
+                              <CheckCircle2 className="size-4 text-green-500" />
+                            ) : (
+                              <Circle className="size-4 text-neutral-600" />
+                            )}
+                            {lesson.name}
+                          </span>
                           {lesson.durationMinutes ? (
                             <span className="text-xs text-neutral-500">
                               {lesson.durationMinutes} min

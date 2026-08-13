@@ -20,6 +20,7 @@ export interface Category {
 }
 
 export interface Lesson {
+  key: string
   name: string
   durationMinutes?: number
 }
@@ -53,6 +54,7 @@ export interface LessonNavRef {
 }
 
 interface LessonDetailBase {
+  key: string
   courseId: string
   courseTitle: string
   sectionName: string
@@ -82,5 +84,22 @@ export interface ProblemLessonDetail extends LessonDetailBase {
 }
 
 export type LessonDetail = VideoLessonDetail | ProblemLessonDetail
+
+export interface Profile {
+  id: string
+  name: string
+}
+
+export interface ProfileProgress {
+  completed: Record<string, true>
+  suggestedProblemsDone: Record<string, string[]>
+  videoPositions: Record<string, number>
+}
+
+export interface ProfileSession {
+  profiles: Profile[]
+  activeProfileId: string | null
+  progress: ProfileProgress
+}
 
 export type ContentResult<T> = { ok: true; data: T } | { ok: false; error: string }
