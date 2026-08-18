@@ -1,6 +1,6 @@
 # NeetCrack
 
-A locally-run Electron desktop app for browsing personally-scraped NeetCode course content
+A locally-run Electron desktop app for browsing personally-scraped course content
 (videos, articles, code samples, interactive coding problems, cheatsheets) with local progress
 tracking across multiple local profiles. Fully offline except for a couple of remote images/embeds
 — see [`docs/decisions.md`](./docs/decisions.md) for the full rationale.
@@ -14,9 +14,7 @@ built — see [`docs/`](./docs/) for the full spec before starting on any of tha
 
 - **Node.js 20+** and npm (this project was scaffolded against Node 24; anything reasonably recent
   works — Vite/Electron's own requirements are the binding constraint, not this app's code).
-- **`DATA/`** — this repo does not include the scraped course data (it's ~7.2 GB and gitignored).
-  The app has nothing to display without it. See [`docs/data-model.md`](./docs/data-model.md) for
-  what's expected under `DATA/` once features that read it are built.
+- **`DATA/`** — Keep the data folder to show.
 
 ## Getting started
 
